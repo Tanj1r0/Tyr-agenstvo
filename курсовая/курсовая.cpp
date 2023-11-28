@@ -11,9 +11,9 @@ class Tour {
 private:
     std::string destination;
     std::string startDate;
-    std::string duration; 
-    std::string availableSeats; 
-    std::string price; 
+    std::string duration;
+    std::string availableSeats;
+    std::string price;
 
 public:
     Tour(const std::string& destination, const std::string& startDate, const std::string& duration,
@@ -44,6 +44,13 @@ public:
         return destination < other.destination;
     }
 
+    bool operator>(const Tour& other) const {
+        return price > other.price;
+    }
+
+    bool operator==(const Tour& other) const {
+        return startDate == other.startDate;
+    }
     void display() const {
         std::cout << "Направление: " << destination << std::endl;
         std::cout << "Дата начала: " << startDate << std::endl;
@@ -126,8 +133,33 @@ int main() {
             }
         }
         else if (choice == 2) {
-            std::sort(tours.begin(), tours.end());
-            std::cout << "Туры отсортированы по направлению.\n";
+            int sortChoice;
+            std::cout << "Выберите критерий сортировки:\n";
+            std::cout << "1. По направлению\n";
+            std::cout << "2. По цене\n";
+            std::cout << "3. По дате начала\n";
+            std::cout << "Ваш выбор: ";
+            std::cin >> sortChoice;
+
+            switch (sortChoice) {
+            case 1:
+                std::sort(tours.begin(), tours.end());
+                std::cout << "Туры отсортированы по направлению.\n";
+                break;
+            case 2:
+                std::sort(tours.begin(), tours.end(), std::greater<Tour>());
+                std::cout << "Туры отсортированы по цене (по убыванию).\n";
+                break;
+            case 3:
+                std::sort(tours.begin(), tours.end(), [](const Tour& a, const Tour& b) {
+                    return a.getStartDate() < b.getStartDate();
+                    });
+                std::cout << "Туры отсортированы по дате начала.\n";
+                break;
+            default:
+                std::cout << "Неверный выбор. Пожалуйста, попробуйте снова.\n";
+                break;
+            }
         }
         else if (choice == 3) {
             for (const auto& tour : tours) {
@@ -176,10 +208,10 @@ int main() {
         else {
             std::cout << "Неверный выбор. Пожалуйста, попробуйте снова.\n";
         }
-    system("pause");
-    system("cls");  // Очистка консоли для следующего вывода меню
+        system("pause");
+        system("cls");  // Очистка консоли для следующего вывода меню
     }
-    
+
 
     return 0;
 }
